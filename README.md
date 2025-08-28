@@ -1,36 +1,152 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Spy-Cat-Agency-Frontend (Dashboard)
 
-## Getting Started
+Backend: [Spy-Cat-Agency-BE](https://github.com/Zebaro24/Spy-Cat-Agency-BE)
 
-First, run the development server:
+## Overview
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+A minimal Next.js dashboard to manage Spy Cats. It lists cats, allows creating new ones, editing salary only, and
+deleting. The UI handles API errors gracefully and displays clear notifications.
+
+## Tech Stack
+
+- Next.js 15
+- React 19
+- Tailwind CSS 4
+- ESLint
+
+## Features
+
+- List spy cats
+- Create a cat: name, years of experience, breed, salary
+- Edit salary only (other fields are read-only in edit mode)
+- Delete a cat
+- Graceful API error handling:
+    - Parses validation errors like `{ "detail": [...] }`
+    - Displays user-friendly, multi-line notifications
+- API field mapping: `years_of_experience` ↔ `years` (UI uses `years`)
+
+## Requirements
+
+- Node.js 20+
+- npm
+- Running Backend API (defaults to http://localhost:8000)
+
+## Environment
+
+- Configure the backend base URL via environment variables:
+    - `NEXT_PUBLIC_API_URL` — base API URL (e.g., `http://localhost:8000`)
+- Example `.env.local`:
+
+```
+bash
+NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+If you don’t set an environment variable, make sure the frontend services point to the correct API URL.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Quick Start (Docker)
+1) Build and run:
+```shell script
+docker compose -f docker/docker-compose.yml up --build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2) Website will be available at:
+http://localhost:3000
 
-## Learn More
+## API Summary (used by the frontend)
 
-To learn more about Next.js, take a look at the following resources:
+Expected backend endpoints:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `POST /cats`
+    - Create a cat: `name`, `years_of_experience`, `breed`, `salary`
+- `GET /cats`
+    - List cats
+- `GET /cats/{id}`
+    - Get a single cat (optional for the UI)
+- `PATCH /cats/{id}`
+    - Update salary only
+- `DELETE /cats/{id}`
+    - Delete a cat
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Create example:
 
-## Deploy on Vercel
+```
+json
+{
+"name": "Whisker Bond",
+"years_of_experience": 5,
+"breed": "Siamese",
+"salary": 5000
+}
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Update salary example:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+json
+{
+"salary": 6500
+}
+```
+
+## Validation & Error Handling
+
+- Backend validates that `years_of_experience` and `salary` are greater than 0.
+- Typical validation error:
+
+```
+json
+{
+  "detail": [
+    {
+      "type": "greater_than",
+      "loc": ["body", "years_of_experience"],
+      "msg": "Input should be greater than 0",
+      "input": 0,
+      "ctx": { "gt": 0 }
+      },
+      {
+      "type": "greater_than",
+      "loc": ["body", "salary"],
+      "msg": "Input should be greater than 0",
+      "input": 0,
+      "ctx": { "gt": 0 }
+    }
+  ]
+}
+```
+
+- The UI parses such responses and shows readable messages to the user.
+
+## Project Structure (simplified)
+
+```
+text
+src/
+app/                 # Next.js routes (App Router)
+components/          # UI components (form, list, notification)
+services/            # API layer (fetch, mappings, error handling)
+public/                # Static assets
+```
+
+## UX
+
+- In edit mode, only salary is editable; name/breed/years are read-only.
+- API errors are surfaced via toast notifications and inline form messages.
+- The UI maps `years_of_experience` ↔ `years` to keep forms simple.
+
+## Deployment
+
+- Set `NEXT_PUBLIC_API_URL` to point to your backend.
+- Any Node hosting works (including Vercel). Provide environment variables in your hosting settings and deploy the
+  repository.
+
+## Known Limitations
+
+- The dashboard covers only cat management (CRUD), as required. Missions/targets UI is not implemented.
+
+## License
+
+MIT (or your preferred license)
+
+```
