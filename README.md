@@ -45,13 +45,15 @@ NEXT_PUBLIC_API_URL=http://localhost:8000
 If you don’t set an environment variable, make sure the frontend services point to the correct API URL.
 
 ## Quick Start (Docker)
+
 1) Build and run:
+
 ```shell script
 docker compose -f docker/docker-compose.yml up --build
 ```
 
 2) Website will be available at:
-http://localhost:3000
+   http://localhost:3000
 
 ## API Summary (used by the frontend)
 
@@ -148,5 +150,3 @@ public/                # Static assets
 ## License
 
 MIT (or your preferred license)
-
-```
