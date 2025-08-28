@@ -146,4 +146,4 @@ public/                # Static assets
 
 ## License
 
-MIT (or your preferred license)
+MIT
