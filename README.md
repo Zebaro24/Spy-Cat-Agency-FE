@@ -73,21 +73,19 @@ Expected backend endpoints:
 Create example:
 
 ```
-json
 {
-"name": "Whisker Bond",
-"years_of_experience": 5,
-"breed": "Siamese",
-"salary": 5000
+  "name": "Whisker Bond",
+  "years_of_experience": 5,
+  "breed": "Siamese",
+  "salary": 5000
 }
 ```
 
 Update salary example:
 
 ```
-json
 {
-"salary": 6500
+  "salary": 6500
 }
 ```
 
@@ -97,7 +95,6 @@ json
 - Typical validation error:
 
 ```
-json
 {
   "detail": [
     {
